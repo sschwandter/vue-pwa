@@ -12,11 +12,16 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: "prompt",
-      // The iOS launch screens are only needed at app launch (read straight
-      // from the device), so keep them out of the precache — otherwise the
-      // ~30 splash PNGs would bloat the offline bundle.
       workbox: {
+        // The iOS launch screens are only needed at app launch (read straight
+        // from the device), so keep them out of the precache — otherwise the
+        // ~30 splash PNGs would bloat the offline bundle.
         globIgnores: ["**/apple-splash/**"],
+        // Once the user accepts the update prompt and the new SW skips waiting,
+        // claim the open page so `controllerchange` fires and vite-plugin-pwa
+        // actually reloads. Without this, "Reload" skips waiting silently and
+        // the page never refreshes. (skipWaiting stays false — still a prompt.)
+        clientsClaim: true,
       },
       // Generates favicon, apple-touch-icon and the maskable/pwa icons from
       // public/logo.svg (see pwa-assets.config.ts) and injects the matching
