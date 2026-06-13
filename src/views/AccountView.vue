@@ -50,19 +50,11 @@ const signIn = async (provider: OAuthProvider) => {
     <template v-else>
       <p class="lead">Sync your habits across devices.</p>
       <p class="note">
-        Sign in to sync. Use the same provider every time — signing in with a
-        different one creates a separate account. Until you sign in, everything
-        stays on this device.
+        Sign in to sync your habits across devices. Until you sign in,
+        everything stays on this device.
       </p>
 
       <div class="providers">
-        <button
-          class="provider-btn"
-          :disabled="!!busy"
-          @click="signIn('apple')"
-        >
-          {{ busy === "apple" ? "Redirecting…" : "Continue with Apple" }}
-        </button>
         <button
           class="provider-btn"
           :disabled="!!busy"
