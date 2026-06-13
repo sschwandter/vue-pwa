@@ -21,15 +21,15 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
-      meta: { title: "Vue PWA" },
+      meta: { title: "Habits" },
     },
     {
       // Lazy-loaded so it ships as its own chunk — the realistic shape once an
       // app has several screens.
-      path: "/about",
-      name: "about",
-      component: () => import("./views/AboutView.vue"),
-      meta: { title: "About" },
+      path: "/faq",
+      name: "faq",
+      component: () => import("./views/FaqView.vue"),
+      meta: { title: "FAQ" },
     },
     {
       path: "/info",

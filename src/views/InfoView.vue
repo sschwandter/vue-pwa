@@ -24,7 +24,7 @@ const rows = [
       </div>
     </dl>
 
-    <p class="note info-note">Tap “About” to go back one step.</p>
+    <p class="note info-note">Tap “FAQ” to go back one step.</p>
   </ContentPage>
 </template>
 
