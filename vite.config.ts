@@ -38,6 +38,19 @@ export default defineConfig(({ command }) => {
     preview: {
       allowedHosts: ["clean-sunglasses-compromise-boat.trycloudflare.com"],
     },
+    build: {
+      rollupOptions: {
+        output: {
+          // The Supabase SDK is loaded via dynamic import (see src/supabase.ts)
+          // and only used by optional cloud sync. Pin it (and its deps) to a
+          // predictably named chunk so the service worker can keep it out of
+          // the offline precache (see workbox.globIgnores) — sync needs the
+          // network anyway.
+          manualChunks: (id) =>
+            id.includes("@supabase") ? "supabase" : undefined,
+        },
+      },
+    },
     plugins: [
       vue(),
       themeColorMeta,
@@ -46,8 +59,9 @@ export default defineConfig(({ command }) => {
         workbox: {
           // The iOS launch screens are only needed at app launch (read straight
           // from the device), so keep them out of the precache — otherwise the
-          // ~30 splash PNGs would bloat the offline bundle.
-          globIgnores: ["**/apple-splash/**"],
+          // ~30 splash PNGs would bloat the offline bundle. The Supabase SDK
+          // chunk (optional sync, network-only) is excluded for the same reason.
+          globIgnores: ["**/apple-splash/**", "**/supabase-*.js"],
           // Once the user accepts the update prompt and the new SW skips waiting,
           // claim the open page so `controllerchange` fires and vite-plugin-pwa
           // actually reloads. Without this, "Reload" skips waiting silently and

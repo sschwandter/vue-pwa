@@ -69,3 +69,32 @@ Icons are also generated automatically as part of `npm run build`.
 The PWA features only run in a production build over HTTPS (or `localhost`).
 Run `npm run build && npm run preview`, open the network URL on the device, and
 use Safari's **Share → Add to Home Screen**.
+
+## Optional: cloud sync across devices
+
+The habit tracker works fully offline with no account — habits live in
+`localStorage`. Cloud sync (accounts + cross-device sync) is **opt-in** and off
+unless you provide [Supabase](https://supabase.com) credentials at build time.
+
+To enable it:
+
+1. Create a Supabase project, then run `supabase/migrations/0001_habits.sql` in
+   its SQL editor (creates the `habits` table, Row Level Security policies, and
+   the realtime publication).
+2. Copy `.env.example` to `.env.local` and fill in `VITE_SUPABASE_URL` and
+   `VITE_SUPABASE_PUBLISHABLE_KEY` (Project Settings → API). Both are public;
+   **never** add a secret (`sb_secret_…`) / service-role key.
+3. In Supabase **Authentication → URL Configuration**, set the **Site URL** and
+   add your app origin(s) to the redirect allow-list (e.g.
+   `http://localhost:5173` for dev and `https://<you>.github.io/vue-pwa/` in
+   production) so the magic link is allowed to return to the app.
+4. `npm run dev` (or build) — the **Account & sync** screen now offers a
+   passwordless email sign-in. Once signed in, habits sync across devices and
+   stay cached locally for offline use.
+
+How it works: `localStorage` is the offline working copy; Supabase is the
+reconciliation layer. Changes push on edit and a full pull/merge runs on
+sign-in, on reconnect, and when the app returns to the foreground. Conflicts
+resolve per-record, last-write-wins (`src/composables/useHabits.ts`,
+`useAuth.ts`, `src/supabase.ts`). Leave the env vars unset and none of the
+Supabase SDK ships in the build.
