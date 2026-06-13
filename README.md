@@ -3,6 +3,24 @@
 A minimal Vue 3 + TypeScript + Vite progressive web app tuned to feel as
 native as possible when installed to the iOS home screen.
 
+This repo is meant to be used as a **template**. Before building on it:
+
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** — load-bearing invariants (what not to
+  change and why). Read this first.
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** — the paved-path guide for adding
+  screens, components, colors, and branding.
+
+## Use-as-template checklist
+
+Rename these placeholders before shipping your own app:
+
+- [ ] `vite.config.ts` → remove the personal tunnel host in `preview.allowedHosts`.
+- [ ] `vite.config.ts` → manifest `name`, `short_name`, `description`.
+- [ ] `index.html` → `apple-mobile-web-app-title` and `<title>`.
+- [ ] `package.json` → `name`.
+- [ ] `public/logo.svg` → your logo, then `npm run generate-pwa-assets &&
+      npm run generate-pwa-splash`.
+
 ## What makes it iOS-friendly
 
 - **Installable & standalone** — full web manifest (`display: standalone`,

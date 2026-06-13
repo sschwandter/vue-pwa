@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "npm run check-theme && vue-tsc -b && vite build",
     "preview": "vite preview",
+    "check-theme": "node scripts/check-theme.mjs",
     "generate-pwa-assets": "pwa-assets-generator",
     "generate-pwa-splash": "node scripts/generate-splash.mjs"
   },
