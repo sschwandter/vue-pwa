@@ -10,8 +10,10 @@ let registration: ServiceWorkerRegistration | undefined;
 let pollTimer: ReturnType<typeof setInterval> | undefined;
 
 // How often to poll for a new service worker while the app stays open.
-// Drop this to e.g. 10 * 1000 temporarily when testing the update flow.
-const UPDATE_POLL_INTERVAL = 60 * 60 * 1000; // hourly
+// Defaults to hourly; override via the VITE_SW_POLL_INTERVAL env var (ms) for a
+// fast test loop, e.g. `VITE_SW_POLL_INTERVAL=10000 npm run build`.
+const UPDATE_POLL_INTERVAL =
+  Number(import.meta.env.VITE_SW_POLL_INTERVAL) || 60 * 60 * 1000;
 
 const updateSW = registerSW({
   onNeedRefresh() {
@@ -23,6 +25,16 @@ const updateSW = registerSW({
       pollTimer = setInterval(checkForUpdate, UPDATE_POLL_INTERVAL);
     }
   },
+});
+
+// Re-check whenever the app returns to the foreground. This is the main
+// trigger on iOS, where a standalone PWA resumes from a frozen state instead
+// of reloading (so the hourly poll above may not have fired). Backgrounding
+// and reopening the app is also the quickest way to test the update flow.
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    checkForUpdate();
+  }
 });
 
 /** Activate the waiting service worker and reload into the new version. */

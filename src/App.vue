@@ -5,6 +5,11 @@ import UpdateToast from "./components/UpdateToast.vue";
 const message = ref("Welcome to Vue PWA!");
 const inputText = ref("");
 
+// Drive the button's pressed state from pointer events: pointerdown fires the
+// instant a finger touches (before iOS's tap/scroll disambiguation that makes
+// :active lag), and pointercancel clears it if the gesture becomes a scroll.
+const pressed = ref(false);
+
 const updateMessage = () => {
   message.value = inputText.value || "Welcome to Vue PWA!";
 };
@@ -25,7 +30,16 @@ const updateMessage = () => {
           @keyup.enter="updateMessage"
           @blur="updateMessage"
         />
-        <button @click="updateMessage">Update</button>
+        <button
+          :class="{ 'is-pressed': pressed }"
+          @click="updateMessage"
+          @pointerdown="pressed = true"
+          @pointerup="pressed = false"
+          @pointercancel="pressed = false"
+          @pointerleave="pressed = false"
+        >
+          Update
+        </button>
       </div>
 
       <p class="instructions">
@@ -100,11 +114,15 @@ button {
   appearance: none;
   /* Removes the 300ms tap delay and double-tap zoom on this control. */
   touch-action: manipulation;
+  transition: transform 0.1s ease, background-color 0.1s ease;
 }
 
+/* .is-pressed (pointer-driven) gives instant touch feedback; :active keeps
+   keyboard/mouse activation covered. */
+button.is-pressed,
 button:active {
-  background-color: #45a049;
-  transform: scale(0.98);
+  background-color: #3d8b40;
+  transform: scale(0.94);
 }
 
 .instructions {
