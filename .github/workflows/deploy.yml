@@ -32,8 +32,17 @@ jobs:
 
       # Production build uses the /vue-pwa/ base (set in vite.config.ts) since
       # the project site is served from /<repo>/.
+      #
+      # The Supabase values enable optional cloud sync. They're read from repo
+      # Variables (Settings → Secrets and variables → Actions → Variables) — not
+      # Secrets, since both are public-by-design and ship in the client anyway
+      # (RLS protects the data). If the variables are unset, the build is simply
+      # local-only with no sync.
       - name: Build
         run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
 
       # GitHub Pages has no SPA rewrite rules. Serving index.html for unknown
       # paths lets deep links / refreshes on client routes (e.g. /vue-pwa/faq)

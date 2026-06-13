@@ -11,7 +11,9 @@ const { habits, addHabit, removeHabit, toggleToday, isDoneToday, streak } =
 const draft = ref("");
 const { pressed, on: pressEvents } = usePressed();
 
-const doneCount = computed(() => habits.filter((h) => isDoneToday(h)).length);
+const doneCount = computed(
+  () => habits.value.filter((h) => isDoneToday(h)).length
+);
 
 const submit = () => {
   addHabit(draft.value);
@@ -71,7 +73,10 @@ const confirmRemove = (id: string, name: string) => {
       going. Everything is saved on this device and works offline.
     </p>
 
-    <LinkRow to="/faq">FAQ ›</LinkRow>
+    <nav class="links">
+      <LinkRow to="/account">Account &amp; sync ›</LinkRow>
+      <LinkRow to="/faq">FAQ ›</LinkRow>
+    </nav>
   </div>
 </template>
 
@@ -149,5 +154,10 @@ button:active {
   color: var(--muted);
   font-size: 0.9rem;
   margin: 0 0 2rem;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
 }
 </style>
