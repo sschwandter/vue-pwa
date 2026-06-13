@@ -78,19 +78,23 @@ unless you provide [Supabase](https://supabase.com) credentials at build time.
 
 To enable it:
 
-1. Create a Supabase project, then run `supabase/migrations/0001_habits.sql` in
-   its SQL editor (creates the `habits` table, Row Level Security policies, and
-   the realtime publication).
+1. Create a Supabase project, then run the SQL in `supabase/migrations/` in its
+   SQL editor — `0001_habits.sql` (the `habits` table, Row Level Security
+   policies, realtime publication) and `0002_habits_updated_at.sql` (the
+   server-side `updated_at` trigger).
 2. Copy `.env.example` to `.env.local` and fill in `VITE_SUPABASE_URL` and
    `VITE_SUPABASE_PUBLISHABLE_KEY` (Project Settings → API). Both are public;
    **never** add a secret (`sb_secret_…`) / service-role key.
-3. In Supabase **Authentication → URL Configuration**, set the **Site URL** and
-   add your app origin(s) to the redirect allow-list (e.g.
-   `http://localhost:5173` for dev and `https://<you>.github.io/vue-pwa/` in
-   production) so the magic link is allowed to return to the app.
-4. `npm run dev` (or build) — the **Account & sync** screen now offers a
-   passwordless email sign-in. Once signed in, habits sync across devices and
-   stay cached locally for offline use.
+3. Enable a sign-in provider under **Authentication → Providers** — Google
+   and/or Apple (the **Account & sync** screen offers both). Each needs its
+   OAuth client configured per Supabase's provider docs.
+4. In **Authentication → URL Configuration**, set the **Site URL** and add your
+   app origin(s) to the redirect allow-list (e.g. `http://localhost:5173` for
+   dev and your production URL) so OAuth is allowed to return to the app.
+5. `npm run dev` (or build) — the **Account & sync** screen now offers
+   "Continue with Apple/Google". Sign in with the *same* provider each time
+   (a different provider may create a separate account). Once signed in, habits
+   sync across devices and stay cached locally for offline use.
 
 How it works: `localStorage` is the offline working copy; Supabase is the
 reconciliation layer. Changes push on edit and a full pull/merge runs on
