@@ -39,11 +39,13 @@ const router = createRouter({
   ],
   // The app scrolls inside #app, not the window, so vue-router's default
   // (window-based) scroll handling does nothing here. Save/restore the #app
-  // scroll position ourselves: top on forward nav, previous offset on back.
-  scrollBehavior(to) {
+  // scroll position ourselves. `savedPosition` is only set on back/forward
+  // (popstate) navigations — on a fresh forward push we always go to the top
+  // (its own value is unusable here since #app, not the window, scrolls).
+  scrollBehavior(to, _from, savedPosition) {
     const el = getScroller();
     if (!el) return;
-    const top = scrollPositions.get(to.fullPath) ?? 0;
+    const top = savedPosition ? scrollPositions.get(to.fullPath) ?? 0 : 0;
     // Wait a frame so the incoming view is laid out before we scroll.
     requestAnimationFrame(() => el.scrollTo({ top }));
   },
