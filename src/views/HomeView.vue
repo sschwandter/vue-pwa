@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import LinkRow from "../components/LinkRow.vue";
+import { usePressed } from "../composables/usePressed";
 
 const message = ref("Welcome to Vue PWA!");
 const inputText = ref("");
 
-// Drive the button's pressed state from pointer events: pointerdown fires the
-// instant a finger touches (before iOS's tap/scroll disambiguation that makes
-// :active lag), and pointercancel clears it if the gesture becomes a scroll.
-const pressed = ref(false);
+const { pressed, on: pressEvents } = usePressed();
 
 const updateMessage = () => {
   message.value = inputText.value || "Welcome to Vue PWA!";
@@ -34,11 +33,8 @@ const updateMessage = () => {
       />
       <button
         :class="{ 'is-pressed': pressed }"
+        v-on="pressEvents"
         @click="updateMessage"
-        @pointerdown="pressed = true"
-        @pointerup="pressed = false"
-        @pointercancel="pressed = false"
-        @pointerleave="pressed = false"
       >
         Update
       </button>
@@ -48,7 +44,7 @@ const updateMessage = () => {
       This is a PWA optimized for iOS. Try adding it to your home screen!
     </p>
 
-    <RouterLink class="link-row" to="/about">About this app ›</RouterLink>
+    <LinkRow to="/about">About this app ›</LinkRow>
   </div>
 </template>
 
@@ -104,8 +100,8 @@ button {
   transition: transform 0.1s ease, background-color 0.1s ease;
 }
 
-/* .is-pressed (pointer-driven) gives instant touch feedback; :active keeps
-   keyboard/mouse activation covered. */
+/* .is-pressed (pointer-driven, see usePressed) gives instant touch feedback;
+   :active keeps keyboard/mouse activation covered. */
 button.is-pressed,
 button:active {
   background-color: #3d8b40;
@@ -118,13 +114,5 @@ button:active {
   font-size: 0.9rem;
   max-width: 300px;
   margin: 0 0 2rem;
-}
-
-.link-row {
-  color: var(--accent);
-  text-decoration: none;
-  font-size: 1rem;
-  padding: 12px;
-  touch-action: manipulation;
 }
 </style>

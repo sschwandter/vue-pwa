@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import ContentPage from "../components/ContentPage.vue";
+import LinkRow from "../components/LinkRow.vue";
+
 // The native-feel techniques this demo applies, listed so the page has enough
 // content to scroll (handy for checking scroll save/restore on back nav).
 const features = [
@@ -16,7 +19,7 @@ const features = [
 </script>
 
 <template>
-  <div class="about">
+  <ContentPage>
     <p class="lead">
       A minimal Vue 3 PWA tuned to feel as native as possible when installed to
       the iOS home screen.
@@ -32,21 +35,11 @@ const features = [
       position, and this page returns to the top next time you open it.
     </p>
 
-    <RouterLink class="link-row" to="/info">Info ›</RouterLink>
-  </div>
+    <LinkRow to="/info">Info ›</LinkRow>
+  </ContentPage>
 </template>
 
 <style scoped>
-.about {
-  max-width: 520px;
-  margin: 0 auto;
-}
-
-.lead {
-  font-size: 1.05rem;
-  margin-top: 0;
-}
-
 h2 {
   font-size: 1rem;
   margin: 1.5rem 0 0.5rem;
@@ -56,19 +49,5 @@ h2 {
   margin: 0;
   padding-left: 1.2rem;
   line-height: 1.7;
-}
-
-.note {
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.link-row {
-  display: inline-block;
-  color: var(--accent);
-  text-decoration: none;
-  font-size: 1rem;
-  padding: 12px 0;
-  touch-action: manipulation;
 }
 </style>

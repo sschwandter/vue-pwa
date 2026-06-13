@@ -1,6 +1,28 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { VitePWA } from "vite-plugin-pwa";
+import { surface } from "./theme.js";
+
+// Inject the light/dark status-bar tint from the shared theme so the colors
+// live in one place (theme.js) rather than being hand-copied into index.html.
+// These come first so iOS (which uses the first matching meta) picks them;
+// vite-plugin-pwa also emits a media-less fallback from manifest.theme_color
+// (= surface.light), which only applies if neither media query matches.
+const themeColorMeta: Plugin = {
+  name: "inject-theme-color",
+  transformIndexHtml: () => [
+    {
+      tag: "meta",
+      attrs: { name: "theme-color", content: surface.light, media: "(prefers-color-scheme: light)" },
+      injectTo: "head",
+    },
+    {
+      tag: "meta",
+      attrs: { name: "theme-color", content: surface.dark, media: "(prefers-color-scheme: dark)" },
+      injectTo: "head",
+    },
+  ],
+};
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -10,6 +32,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    themeColorMeta,
     VitePWA({
       registerType: "prompt",
       workbox: {
@@ -37,8 +60,8 @@ export default defineConfig({
         orientation: "portrait",
         start_url: "/",
         scope: "/",
-        background_color: "#1c1c1e",
-        theme_color: "#f5f5f5",
+        background_color: surface.dark,
+        theme_color: surface.light,
       },
     }),
   ],

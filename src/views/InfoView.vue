@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import ContentPage from "../components/ContentPage.vue";
+
 // A simple leaf page reached from About. Back navigation, scroll restore and
 // the title all work automatically via the router/shell — no per-page wiring.
 const rows = [
@@ -12,7 +14,7 @@ const rows = [
 </script>
 
 <template>
-  <div class="info">
+  <ContentPage>
     <p class="lead">Build &amp; technology details for this demo.</p>
 
     <dl class="info-list">
@@ -22,21 +24,11 @@ const rows = [
       </div>
     </dl>
 
-    <p class="note">Tap “About” to go back one step.</p>
-  </div>
+    <p class="note info-note">Tap “About” to go back one step.</p>
+  </ContentPage>
 </template>
 
 <style scoped>
-.info {
-  max-width: 520px;
-  margin: 0 auto;
-}
-
-.lead {
-  font-size: 1.05rem;
-  margin-top: 0;
-}
-
 .info-list {
   margin: 0;
 }
@@ -58,9 +50,7 @@ const rows = [
   text-align: right;
 }
 
-.note {
-  color: var(--muted);
-  font-size: 0.9rem;
+.info-note {
   margin-top: 1.5rem;
 }
 </style>

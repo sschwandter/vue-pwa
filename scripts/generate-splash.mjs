@@ -7,16 +7,17 @@ import { mkdir, readFile, writeFile, rm } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import sharp from "sharp";
+import { surface } from "../theme.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const logoPath = join(root, "public", "logo.svg");
 const outDir = join(root, "public", "apple-splash");
 const indexPath = join(root, "index.html");
 
-// Surface colors — must match --surface in src/style.css.
+// Surface colors come from the shared theme (theme.js); sharp accepts hex.
 const SCHEMES = [
-  { name: "light", bg: { r: 245, g: 245, b: 245, alpha: 1 } }, // #f5f5f5
-  { name: "dark", bg: { r: 28, g: 28, b: 30, alpha: 1 } }, // #1c1c1e
+  { name: "light", bg: surface.light },
+  { name: "dark", bg: surface.dark },
 ];
 
 // Portrait CSS dimensions + device-pixel-ratio for current-ish iPhonesiPads.

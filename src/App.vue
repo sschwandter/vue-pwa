@@ -7,7 +7,7 @@ const route = useRoute();
 const router = useRouter();
 
 const isHome = computed(() => route.name === "home");
-const title = computed(() => (route.meta.title as string | undefined) ?? "Vue PWA");
+const title = computed(() => route.meta.title);
 
 // iOS shows the previous screen's title on the back button (collapsing to a
 // generic "Back" when it's missing or too long). Resolve it from the history
@@ -17,9 +17,7 @@ const backLabel = computed(() => {
   const backPath = window.history.state?.back;
   if (typeof backPath === "string") {
     const previousTitle = router.resolve(backPath).meta.title;
-    if (typeof previousTitle === "string" && previousTitle.length <= 14) {
-      return previousTitle;
-    }
+    if (previousTitle && previousTitle.length <= 14) return previousTitle;
   }
   return "Back";
 });

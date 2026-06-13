@@ -1,5 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "./views/HomeView.vue";
+import { getScroller } from "./dom";
+
+// Every route carries a title (used for document.title and the back-button
+// label). Typing it here makes it required and removes per-use casts.
+declare module "vue-router" {
+  interface RouteMeta {
+    title: string;
+  }
+}
 
 // Per-route #app scroll offsets, saved on leave and restored on return.
 const scrollPositions = new Map<string, number>();
@@ -32,7 +41,7 @@ const router = createRouter({
   // (window-based) scroll handling does nothing here. Save/restore the #app
   // scroll position ourselves: top on forward nav, previous offset on back.
   scrollBehavior(to) {
-    const el = document.getElementById("app");
+    const el = getScroller();
     if (!el) return;
     const top = scrollPositions.get(to.fullPath) ?? 0;
     // Wait a frame so the incoming view is laid out before we scroll.
@@ -41,12 +50,12 @@ const router = createRouter({
 });
 
 router.beforeEach((_to, from) => {
-  const el = document.getElementById("app");
+  const el = getScroller();
   if (el) scrollPositions.set(from.fullPath, el.scrollTop);
 });
 
 router.afterEach((to) => {
-  document.title = (to.meta.title as string | undefined) ?? "Vue PWA";
+  document.title = to.meta.title;
 });
 
 // A failed dynamic import after a deploy means the requested route chunk no

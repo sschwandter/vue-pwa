@@ -2,6 +2,7 @@ import "./style.css";
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
+import { APP_SCROLL_ID } from "./dom";
 
 // Ask the browser to treat our stored data (Cache, IndexedDB, localStorage) as
 // durable so iOS doesn't evict it after a period of disuse. No-op where the API
@@ -17,4 +18,4 @@ if (navigator.storage?.persist) {
     });
 }
 
-createApp(App).use(router).mount("#app");
+createApp(App).use(router).mount(`#${APP_SCROLL_ID}`);
