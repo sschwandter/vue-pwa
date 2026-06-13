@@ -85,16 +85,17 @@ To enable it:
 2. Copy `.env.example` to `.env.local` and fill in `VITE_SUPABASE_URL` and
    `VITE_SUPABASE_PUBLISHABLE_KEY` (Project Settings → API). Both are public;
    **never** add a secret (`sb_secret_…`) / service-role key.
-3. Enable **Google** under **Authentication → Providers**: create an OAuth
-   client in the Google Cloud Console, set the authorized redirect URI to your
-   project's `https://<project-ref>.supabase.co/auth/v1/callback`, and paste the
-   client ID/secret into Supabase.
-4. In **Authentication → URL Configuration**, set the **Site URL** and add your
-   app origin(s) to the redirect allow-list (e.g. `http://localhost:5173` for
-   dev and your production URL) so OAuth is allowed to return to the app.
-5. `npm run dev` (or build) — the **Account & sync** screen now offers
-   "Continue with Google". Once signed in, habits sync across devices and stay
-   cached locally for offline use.
+3. In Supabase **Authentication → URL Configuration**, set the **Site URL** and
+   add your app origin(s) to the redirect allow-list (e.g. `http://localhost:5173`
+   for dev and your production URL) so the magic link is allowed to return to
+   the app.
+4. `npm run dev` (or build) — the **Account & sync** screen now offers a
+   passwordless email sign-in. Once signed in, habits sync across devices and
+   stay cached locally for offline use.
+
+   > Note: Supabase's built-in email sender is heavily rate-limited (a few
+   > messages/hour, dev-only). For real use, configure custom SMTP under
+   > **Authentication → Emails**, or swap the magic link for an OAuth provider.
 
 How it works: `localStorage` is the offline working copy; Supabase is the
 reconciliation layer. Changes push on edit and a full pull/merge runs on
