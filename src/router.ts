@@ -21,6 +21,12 @@ const router = createRouter({
       component: () => import("./views/AboutView.vue"),
       meta: { title: "About" },
     },
+    {
+      path: "/info",
+      name: "info",
+      component: () => import("./views/InfoView.vue"),
+      meta: { title: "Info" },
+    },
   ],
   // The app scrolls inside #app, not the window, so vue-router's default
   // (window-based) scroll handling does nothing here. Save/restore the #app

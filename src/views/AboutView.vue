@@ -31,6 +31,8 @@ const features = [
       Scroll down and tap “Back” — the home screen restores its previous scroll
       position, and this page returns to the top next time you open it.
     </p>
+
+    <RouterLink class="link-row" to="/info">Info ›</RouterLink>
   </div>
 </template>
 
@@ -59,5 +61,14 @@ h2 {
 .note {
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+.link-row {
+  display: inline-block;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 12px 0;
+  touch-action: manipulation;
 }
 </style>
