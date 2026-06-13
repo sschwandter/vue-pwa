@@ -37,7 +37,10 @@ const dismiss = () => {
   display: flex;
   align-items: center;
   gap: 16px;
-  max-width: min(420px, calc(100vw - 32px));
+  max-width: min(
+    420px,
+    calc(100vw - 32px - env(safe-area-inset-left) - env(safe-area-inset-right))
+  );
   padding: 12px 12px 12px 18px;
 
   border-radius: 14px;
@@ -95,7 +98,8 @@ const dismiss = () => {
   background: rgba(255, 255, 255, 0.12);
 }
 
-/* Slide up + fade in, respecting reduced-motion. */
+/* Slide up + fade in. The global prefers-reduced-motion rule in style.css
+   collapses these transitions to ~instant when the user asks for less motion. */
 .toast-enter-active,
 .toast-leave-active {
   transition: opacity 0.25s ease, transform 0.25s ease;
@@ -105,16 +109,5 @@ const dismiss = () => {
 .toast-leave-to {
   opacity: 0;
   transform: translate(-50%, 16px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .toast-enter-active,
-  .toast-leave-active {
-    transition: opacity 0.25s ease;
-  }
-  .toast-enter-from,
-  .toast-leave-to {
-    transform: translateX(-50%);
-  }
 }
 </style>

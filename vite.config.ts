@@ -12,6 +12,12 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: "prompt",
+      // The iOS launch screens are only needed at app launch (read straight
+      // from the device), so keep them out of the precache — otherwise the
+      // ~30 splash PNGs would bloat the offline bundle.
+      workbox: {
+        globIgnores: ["**/apple-splash/**"],
+      },
       // Generates favicon, apple-touch-icon and the maskable/pwa icons from
       // public/logo.svg (see pwa-assets.config.ts) and injects the matching
       // <link> tags into index.html plus the icons into the manifest.

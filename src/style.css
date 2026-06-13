@@ -35,6 +35,20 @@
   box-sizing: border-box;
 }
 
+/* Honor the system "Reduce Motion" setting everywhere — collapse animations
+   and transitions instead of disabling them outright (keeps state changes
+   instant but functional). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Native-app feel: no tap flash, no long-press callout, no text selection. */
 * {
   -webkit-tap-highlight-color: transparent;

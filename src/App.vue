@@ -27,6 +27,10 @@ const updateMessage = () => {
           type="text"
           v-model="inputText"
           placeholder="Type something..."
+          enterkeyhint="done"
+          autocomplete="off"
+          autocapitalize="sentences"
+          autocorrect="on"
           @keyup.enter="updateMessage"
           @blur="updateMessage"
         />
@@ -54,9 +58,12 @@ const updateMessage = () => {
 <style scoped>
 .app-container {
   padding: 20px;
-  /* Keep content clear of the notch and the home indicator. */
+  /* Keep content clear of the notch, home indicator and — in landscape — the
+     Dynamic Island / rounded corners on the left/right edges. */
   padding-top: calc(20px + env(safe-area-inset-top));
   padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  padding-left: calc(20px + env(safe-area-inset-left));
+  padding-right: calc(20px + env(safe-area-inset-right));
   /* min-height (not height) so short content fills the screen without
      overflowing the scroll container, while long content can still grow. */
   min-height: 100%;
