@@ -5,34 +5,29 @@ import { VitePWA } from "vite-plugin-pwa";
 // https://vitejs.dev/config/
 export default defineConfig({
   server: { host: true },
+  preview: {
+    allowedHosts: ["clean-sunglasses-compromise-boat.trycloudflare.com"],
+  },
   plugins: [
     vue(),
     VitePWA({
-      registerType: "autoUpdate",
-      includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
+      registerType: "prompt",
+      // Generates favicon, apple-touch-icon and the maskable/pwa icons from
+      // public/logo.svg (see pwa-assets.config.ts) and injects the matching
+      // <link> tags into index.html plus the icons into the manifest.
+      pwaAssets: {
+        config: true,
+      },
       manifest: {
         name: "Vue PWA App",
         short_name: "Vue PWA",
         description: "Vue.js PWA Application",
-        theme_color: "#ffffff",
-        icons: [
-          {
-            src: "pwa-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
-          },
-          {
-            src: "pwa-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-          },
-          {
-            src: "pwa-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "any maskable",
-          },
-        ],
+        display: "standalone",
+        orientation: "portrait",
+        start_url: "/",
+        scope: "/",
+        background_color: "#1c1c1e",
+        theme_color: "#f5f5f5",
       },
     }),
   ],

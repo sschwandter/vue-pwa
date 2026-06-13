@@ -6,8 +6,20 @@
   -webkit-tap-highlight-color: transparent;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+
+  /* Theme tokens — single source of truth for surface/text colors. Defaults
+     are the dark scheme; the light scheme overrides them below. Keep the root
+     background equal to --surface: iOS fills the safe-area regions (behind the
+     home indicator and inside the rounded display corners) with the root/body
+     background, so a mismatch shows as a strip there. */
+  --surface: #1c1c1e;
+  --on-surface: rgba(255, 255, 255, 0.87);
+  --muted: #9a9a9e;
+  --input-bg: #2c2c2e;
+  --input-border: #3a3a3c;
+
+  color: var(--on-surface);
+  background-color: var(--surface);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,6 +27,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* border-box so padding/safe-area insets never add to an element's height
+   (otherwise a height:100% + padding container overflows and becomes scrollable). */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Native-app feel: no tap flash, no long-press callout, no text selection. */
 * {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
@@ -23,94 +44,55 @@
   touch-action: pan-y pinch-zoom;
 }
 
+/* Re-enable selection and a 16px font (prevents iOS zoom-on-focus) for inputs. */
 input, textarea {
   -webkit-user-select: text;
   user-select: text;
-  font-size: 16px !important;
+  font-size: 16px;
   -webkit-appearance: none;
   appearance: none;
-  border-radius: 0;
   touch-action: auto;
-  -webkit-tap-highlight-color: transparent;
 }
 
 input:focus, textarea:focus {
   outline: none;
-  -webkit-tap-highlight-color: transparent;
 }
 
+html,
+body {
+  height: 100%;
+}
+
+/* Lock the page itself so it can never rubber-band scroll. */
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 100vh;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: pan-y pinch-zoom;
+  background-color: var(--surface);
+}
+
+/* The single scroll container. Pinned with fixed inset:0 (no vh/dvh units) so
+   it always matches the real standalone viewport, including the area behind the
+   home indicator — that's what leaves a fixed white strip at the bottom. */
+#app {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
   touch-action: pan-y pinch-zoom;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card {
-  padding: 2em;
-}
-
-#app {
-  width: 100%;
-  height: 100vh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  touch-action: pan-y pinch-zoom;
+  /* Matches .app-container so there's no flash/gap before Vue paints. */
+  background-color: var(--surface);
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-/* Prevent iOS zoom on focus */
-@media screen and (-webkit-min-device-pixel-ratio:0) { 
-  select,
-  textarea,
-  input {
-    font-size: 16px !important;
+    --surface: #f5f5f5;
+    --on-surface: #2c3e50;
+    --muted: #666;
+    --input-bg: #ffffff;
+    --input-border: #ddd;
   }
 }

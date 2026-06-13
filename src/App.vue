@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
+import UpdateToast from "./components/UpdateToast.vue";
 
 const message = ref("Welcome to Vue PWA!");
 const inputText = ref("");
@@ -7,48 +8,6 @@ const inputText = ref("");
 const updateMessage = () => {
   message.value = inputText.value || "Welcome to Vue PWA!";
 };
-
-onMounted(() => {
-  let lastTap = 0;
-  const doubleTapDelay = 300;
-
-  document.addEventListener(
-    "touchend",
-    (e) => {
-      const target = e.target as HTMLElement;
-      const currentTime = new Date().getTime();
-      const tapLength = currentTime - lastTap;
-
-      // Only prevent default on double tap of non-input elements
-      if (tapLength < doubleTapDelay && tapLength > 0) {
-        if (
-          !(
-            target instanceof HTMLInputElement ||
-            target instanceof HTMLTextAreaElement
-          )
-        ) {
-          e.preventDefault();
-        }
-      }
-      lastTap = currentTime;
-    },
-    { passive: false }
-  );
-
-  // Handle input focus
-  // document.addEventListener(
-  //   "focus",
-  //   (e) => {
-  //     if (
-  //       e.target instanceof HTMLInputElement ||
-  //       e.target instanceof HTMLTextAreaElement
-  //     ) {
-  //       e.target.scrollIntoView({ behavior: "smooth", block: "center" });
-  //     }
-  //   },
-  //   true
-  // );
-});
 </script>
 
 <template>
@@ -73,17 +32,25 @@ onMounted(() => {
         This is a PWA optimized for iOS. Try adding it to your home screen!
       </p>
     </main>
+
+    <UpdateToast />
   </div>
 </template>
 
 <style scoped>
 .app-container {
   padding: 20px;
-  height: 100%;
+  /* Keep content clear of the notch and the home indicator. */
+  padding-top: calc(20px + env(safe-area-inset-top));
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  /* min-height (not height) so short content fills the screen without
+     overflowing the scroll container, while long content can still grow. */
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f5f5f5;
+  background-color: var(--surface);
+  color: var(--on-surface);
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y pinch-zoom;
 }
@@ -91,12 +58,11 @@ onMounted(() => {
 header {
   text-align: center;
   margin-bottom: 2rem;
-  padding-top: env(safe-area-inset-top);
 }
 
 h1 {
   font-size: 1.5rem;
-  color: #2c3e50;
+  color: inherit;
   margin: 0;
   padding: 0;
 }
@@ -114,9 +80,10 @@ h1 {
 input {
   flex: 1;
   padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--input-border);
   border-radius: 4px;
-  background: white;
+  background: var(--input-bg);
+  color: var(--on-surface);
   -webkit-appearance: none;
   appearance: none;
   touch-action: auto;
@@ -131,6 +98,7 @@ button {
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
+  /* Removes the 300ms tap delay and double-tap zoom on this control. */
   touch-action: manipulation;
 }
 
@@ -141,7 +109,7 @@ button:active {
 
 .instructions {
   text-align: center;
-  color: #666;
+  color: var(--muted);
   font-size: 0.9rem;
   max-width: 300px;
   margin: 0;
