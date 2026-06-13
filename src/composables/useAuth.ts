@@ -2,9 +2,9 @@ import { ref } from "vue";
 import type { Provider, User } from "@supabase/supabase-js";
 import { getSupabase } from "../supabase";
 
-/** OAuth providers the Account screen offers. Each must also be enabled in the
- *  Supabase dashboard (Authentication → Providers). */
-export type OAuthProvider = Extract<Provider, "google" | "apple">;
+/** OAuth providers the Account screen offers. Must also be enabled in the
+ *  Supabase dashboard (Authentication → Providers). Add more here as needed. */
+export type OAuthProvider = Extract<Provider, "google">;
 
 /** Minimal view of the signed-in user the app cares about. */
 export type AuthUser = { id: string; email: string | null };
