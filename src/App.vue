@@ -1,54 +1,70 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import UpdateToast from "./components/UpdateToast.vue";
 
-const message = ref("Welcome to Vue PWA!");
-const inputText = ref("");
+const route = useRoute();
+const router = useRouter();
 
-// Drive the button's pressed state from pointer events: pointerdown fires the
-// instant a finger touches (before iOS's tap/scroll disambiguation that makes
-// :active lag), and pointercancel clears it if the gesture becomes a scroll.
-const pressed = ref(false);
+const isHome = computed(() => route.name === "home");
+const title = computed(() => (route.meta.title as string | undefined) ?? "Vue PWA");
 
-const updateMessage = () => {
-  message.value = inputText.value || "Welcome to Vue PWA!";
+// iOS shows the previous screen's title on the back button (collapsing to a
+// generic "Back" when it's missing or too long). Resolve it from the history
+// entry we'd return to; depends on route.fullPath so it recomputes per nav.
+const backLabel = computed(() => {
+  void route.fullPath;
+  const backPath = window.history.state?.back;
+  if (typeof backPath === "string") {
+    const previousTitle = router.resolve(backPath).meta.title;
+    if (typeof previousTitle === "string" && previousTitle.length <= 14) {
+      return previousTitle;
+    }
+  }
+  return "Back";
+});
+
+// iOS standalone PWAs have no system back gesture, so provide our own. Prefer
+// real history (preserves scroll/state); fall back to home when there's none —
+// e.g. the user cold-launched directly onto this route.
+const goBack = () => {
+  if (window.history.state?.back) router.back();
+  else router.push("/");
 };
 </script>
 
 <template>
-  <div class="app-container">
-    <header>
-      <h1>{{ message }}</h1>
+  <div class="app-shell">
+    <header class="nav-bar">
+      <div class="nav-bar__row">
+        <button
+          v-if="!isHome"
+          class="nav-bar__back"
+          @click="goBack"
+          :aria-label="`Back to ${backLabel}`"
+        >
+          <svg
+            class="nav-bar__chevron"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M15 4 L7 12 L15 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          {{ backLabel }}
+        </button>
+        <h1 class="nav-bar__title">{{ title }}</h1>
+      </div>
     </header>
 
-    <main>
-      <div class="input-group">
-        <input
-          type="text"
-          v-model="inputText"
-          placeholder="Type something..."
-          enterkeyhint="done"
-          autocomplete="off"
-          autocapitalize="sentences"
-          autocorrect="on"
-          @keyup.enter="updateMessage"
-          @blur="updateMessage"
-        />
-        <button
-          :class="{ 'is-pressed': pressed }"
-          @click="updateMessage"
-          @pointerdown="pressed = true"
-          @pointerup="pressed = false"
-          @pointercancel="pressed = false"
-          @pointerleave="pressed = false"
-        >
-          Update
-        </button>
-      </div>
-
-      <p class="instructions">
-        This is a PWA optimized for iOS. Try adding it to your home screen!
-      </p>
+    <main class="app-content">
+      <RouterView />
     </main>
 
     <UpdateToast />
@@ -56,88 +72,74 @@ const updateMessage = () => {
 </template>
 
 <style scoped>
-.app-container {
-  padding: 20px;
-  /* Keep content clear of the notch, home indicator and — in landscape — the
-     Dynamic Island / rounded corners on the left/right edges. */
-  padding-top: calc(20px + env(safe-area-inset-top));
-  padding-bottom: calc(20px + env(safe-area-inset-bottom));
-  padding-left: calc(20px + env(safe-area-inset-left));
-  padding-right: calc(20px + env(safe-area-inset-right));
-  /* min-height (not height) so short content fills the screen without
-     overflowing the scroll container, while long content can still grow. */
+.app-shell {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
   background-color: var(--surface);
   color: var(--on-surface);
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-y pinch-zoom;
 }
 
-header {
-  text-align: center;
-  margin-bottom: 2rem;
+/* Sticky translucent nav bar that extends up under the status bar. The
+   safe-area padding lives on the bar; the fixed-height row inside centers the
+   title and back button together so they always share a baseline. */
+.nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding-top: env(safe-area-inset-top);
+  padding-left: calc(8px + env(safe-area-inset-left));
+  padding-right: calc(8px + env(safe-area-inset-right));
+  border-bottom: 1px solid var(--hairline);
+  background-color: color-mix(in srgb, var(--surface) 80%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
 }
 
-h1 {
-  font-size: 1.5rem;
-  color: inherit;
-  margin: 0;
-  padding: 0;
-}
-
-.input-group {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 2rem;
-  width: 100%;
-  max-width: 300px;
+.nav-bar__row {
   position: relative;
-  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
 }
 
-input {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid var(--input-border);
-  border-radius: 4px;
-  background: var(--input-bg);
-  color: var(--on-surface);
-  -webkit-appearance: none;
-  appearance: none;
-  touch-action: auto;
-}
-
-button {
-  padding: 8px 16px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-  /* Removes the 300ms tap delay and double-tap zoom on this control. */
-  touch-action: manipulation;
-  transition: transform 0.1s ease, background-color 0.1s ease;
-}
-
-/* .is-pressed (pointer-driven) gives instant touch feedback; :active keeps
-   keyboard/mouse activation covered. */
-button.is-pressed,
-button:active {
-  background-color: #3d8b40;
-  transform: scale(0.94);
-}
-
-.instructions {
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.9rem;
-  max-width: 300px;
+.nav-bar__title {
+  font-size: 1.0625rem; /* iOS 17pt */
+  font-weight: 600;
+  line-height: 1;
   margin: 0;
-  padding: 0;
+}
+
+.nav-bar__back {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 8px 0 4px;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-size: 1.0625rem;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.nav-bar__chevron {
+  width: 1.1em;
+  height: 1.1em;
+  margin-right: 2px;
+  flex: none;
+}
+
+.app-content {
+  flex: 1;
+  padding: 20px;
+  padding-left: calc(20px + env(safe-area-inset-left));
+  padding-right: calc(20px + env(safe-area-inset-right));
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
 }
 </style>
