@@ -7,6 +7,7 @@ const rows = [
   ["PWA", "vite-plugin-pwa (Workbox)"],
   ["Routing", "vue-router"],
   ["Update model", "prompt + foreground checks"],
+  ["Reload test", "✓ update applied"],
 ];
 </script>
 
