@@ -30,8 +30,10 @@ Rename these placeholders before shipping your own app:
   icons are produced from `public/logo.svg` by
   [`@vite-pwa/assets-generator`](https://vite-pwa-org.netlify.app/assets-generator/)
   and injected automatically (see `pwa-assets.config.ts`).
-- **No rubber-band scroll** — the body is locked and a single `#app`
-  container handles scrolling (`overscroll-behavior: none`).
+- **No page-level rubber-band, native bounce kept** — the body is locked
+  (`overflow: hidden`) so the page can never rubber-band, while the single
+  `#app` scroll container uses `overscroll-behavior: contain` to keep the
+  native elastic bounce inside the content.
 - **Safe areas** — `viewport-fit=cover` with `env(safe-area-inset-*)` padding
   keeps content clear of the notch and home indicator.
 - **No accidental zoom** — 16px inputs prevent focus-zoom and

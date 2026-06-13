@@ -96,10 +96,15 @@ body {
   position: fixed;
   inset: 0;
   overflow-y: auto;
-  overscroll-behavior: none;
+  /* `contain`, not `none`: keep the native elastic bounce *inside* this
+     scroller (it's what makes scrolling feel native), while still preventing
+     scroll-chaining to the page. `none` would also kill the bounce. The page
+     itself can't rubber-band regardless, since <body> is overflow:hidden. */
+  overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y pinch-zoom;
-  /* Matches .app-container so there's no flash/gap before Vue paints. */
+  /* Matches the .app-shell background (App.vue) so there's no flash/gap
+     before Vue paints. */
   background-color: var(--surface);
 }
 

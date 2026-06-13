@@ -3,7 +3,8 @@ import HomeView from "./views/HomeView.vue";
 import { getScroller } from "./dom";
 
 // Every route carries a title (used for document.title and the back-button
-// label). Typing it here makes it required and removes per-use casts.
+// label). Typing it here makes it required and lets every `route.meta.title`
+// read be type-safe without a cast.
 declare module "vue-router" {
   interface RouteMeta {
     title: string;

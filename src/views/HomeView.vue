@@ -42,6 +42,22 @@ const updateMessage = () => {
 
     <p class="instructions">
       This is a PWA optimized for iOS. Try adding it to your home screen!
+
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
     </p>
 
     <LinkRow to="/about">About this app ›</LinkRow>

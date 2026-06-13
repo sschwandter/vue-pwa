@@ -33,6 +33,22 @@ const features = [
     <p class="note">
       Scroll down and tap “Back” — the home screen restores its previous scroll
       position, and this page returns to the top next time you open it.
+
+            blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
+      blage loijdsf oisdf oiblage loijdsf oisdf oisdfo is dfso ifudsoifu osdiufdosf oi sdfo is dfso ifudsoifu osdiufdosf oi
     </p>
 
     <LinkRow to="/info">Info ›</LinkRow>
