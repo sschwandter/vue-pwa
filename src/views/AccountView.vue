@@ -5,16 +5,17 @@ import { usePressed } from "../composables/usePressed";
 import { useAuth } from "../composables/useAuth";
 import { isSyncConfigured } from "../supabase";
 
-const { user, signInWithEmail, signOut } = useAuth();
+const { user, signInWithEmail, verifyEmailOtp, signOut } = useAuth();
 
 const email = ref("");
+const code = ref("");
 const sent = ref(false);
 const error = ref("");
 const busy = ref(false);
 
 const { pressed, on: pressEvents } = usePressed();
 
-const submit = async () => {
+const sendCode = async () => {
   error.value = "";
   if (!email.value.trim() || busy.value) return;
   busy.value = true;
@@ -22,10 +23,30 @@ const submit = async () => {
     await signInWithEmail(email.value);
     sent.value = true;
   } catch (e) {
-    error.value = e instanceof Error ? e.message : "Couldn't send the link.";
+    error.value = e instanceof Error ? e.message : "Couldn't send the code.";
   } finally {
     busy.value = false;
   }
+};
+
+const verify = async () => {
+  error.value = "";
+  if (!code.value.trim() || busy.value) return;
+  busy.value = true;
+  try {
+    // On success, onAuthStateChange flips `user` and this screen re-renders.
+    await verifyEmailOtp(email.value, code.value);
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : "Invalid or expired code.";
+  } finally {
+    busy.value = false;
+  }
+};
+
+const reset = () => {
+  sent.value = false;
+  code.value = "";
+  error.value = "";
 };
 </script>
 
@@ -51,19 +72,45 @@ const submit = async () => {
       <button class="account-btn" @click="signOut">Sign out</button>
     </template>
 
-    <!-- Signed out: magic-link sign-in. -->
+    <!-- Signed out, code sent: enter the one-time code. -->
     <template v-else-if="sent">
-      <p class="lead">Check your email.</p>
+      <p class="lead">Enter your code.</p>
       <p class="note">
-        We sent a sign-in link to <strong>{{ email }}</strong>. Open it on this
-        device to finish signing in.
+        We emailed a 6-digit code to <strong>{{ email }}</strong>. Enter it here
+        to finish signing in — no need to leave the app.
       </p>
+
+      <div class="input-group">
+        <input
+          type="text"
+          v-model="code"
+          placeholder="123456"
+          enterkeyhint="done"
+          autocomplete="one-time-code"
+          autocapitalize="off"
+          autocorrect="off"
+          inputmode="numeric"
+          @keyup.enter="verify"
+        />
+        <button
+          :class="{ 'is-pressed': pressed }"
+          v-on="pressEvents"
+          :disabled="busy"
+          @click="verify"
+        >
+          {{ busy ? "Verifying…" : "Verify" }}
+        </button>
+      </div>
+
+      <p v-if="error" class="error">{{ error }}</p>
+      <button class="link-btn" @click="reset">Use a different email</button>
     </template>
 
+    <!-- Signed out: request a code. -->
     <template v-else>
       <p class="lead">Sync your habits across devices.</p>
       <p class="note">
-        Enter your email and we'll send a one-tap sign-in link — no password.
+        Enter your email and we'll send a 6-digit sign-in code — no password.
         Until you sign in, everything stays on this device.
       </p>
 
@@ -77,15 +124,15 @@ const submit = async () => {
           autocapitalize="off"
           autocorrect="off"
           inputmode="email"
-          @keyup.enter="submit"
+          @keyup.enter="sendCode"
         />
         <button
           :class="{ 'is-pressed': pressed }"
           v-on="pressEvents"
           :disabled="busy"
-          @click="submit"
+          @click="sendCode"
         >
-          {{ busy ? "Sending…" : "Send link" }}
+          {{ busy ? "Sending…" : "Send code" }}
         </button>
       </div>
 
@@ -141,6 +188,21 @@ button:active {
 
 .account-btn {
   margin-top: 1.25rem;
+}
+
+/* Secondary text-style action ("Use a different email"). */
+.link-btn {
+  margin-top: 1rem;
+  padding: 4px 0;
+  background: none;
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+.link-btn:active {
+  filter: none;
+  transform: none;
+  opacity: 0.6;
 }
 
 .error {

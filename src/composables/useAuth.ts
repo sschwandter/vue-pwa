@@ -34,15 +34,28 @@ void initAuth();
 
 export function useAuth() {
   /**
-   * Send a passwordless magic link / OTP to the given email. The link returns
-   * to the current URL, where `detectSessionInUrl` completes the sign-in.
+   * Email the user a one-time sign-in code. We use the code (not the magic
+   * link) because an installed iOS PWA runs in an isolated storage context:
+   * tapping a link opens Safari, whose session the standalone PWA can't see.
+   * Entering the code keeps verification inside the PWA. (The Supabase email
+   * template must include `{{ .Token }}` for the code to appear.)
    */
   const signInWithEmail = async (email: string) => {
     const sb = await getSupabase();
     if (!sb) throw new Error("Cloud sync is not configured.");
-    const { error } = await sb.auth.signInWithOtp({
+    const { error } = await sb.auth.signInWithOtp({ email: email.trim() });
+    if (error) throw error;
+  };
+
+  /** Verify the emailed one-time code; on success the session is stored in this
+   *  (PWA) context and `onAuthStateChange` flips the user to signed-in. */
+  const verifyEmailOtp = async (email: string, token: string) => {
+    const sb = await getSupabase();
+    if (!sb) throw new Error("Cloud sync is not configured.");
+    const { error } = await sb.auth.verifyOtp({
       email: email.trim(),
-      options: { emailRedirectTo: window.location.href },
+      token: token.trim(),
+      type: "email",
     });
     if (error) throw error;
   };
@@ -52,7 +65,7 @@ export function useAuth() {
     if (sb) await sb.auth.signOut();
   };
 
-  return { user, ready, signInWithEmail, signOut };
+  return { user, ready, signInWithEmail, verifyEmailOtp, signOut };
 }
 
 // Exported for non-component modules (e.g. useHabits) that need to react to
